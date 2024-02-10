@@ -90,7 +90,10 @@ private extension Project {
             resources: framework.resources(
                 appName: appName
             ),
-            dependencies: []
+            dependencies: [
+                .external(name: "SnapKit"),
+                .external(name: "ComposableArchitecture")
+            ]
         )
 
         let tests: Target = .target(
