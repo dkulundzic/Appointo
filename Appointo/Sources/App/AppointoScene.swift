@@ -1,6 +1,6 @@
 import UIKit
 
-class AppointoApp: NSObject, UISceneDelegate {
+class AppointoScene: NSObject, UIWindowSceneDelegate {
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -12,7 +12,7 @@ class AppointoApp: NSObject, UISceneDelegate {
             return
         }
 
-        let window = UIWindow(
+        _ = UIWindow(
             windowScene: windowScene
         )
     }

@@ -1,44 +1,36 @@
 import ProjectDescription
 
+enum Framework: String, CaseIterable {
+    case core
+    case model
+    case localization
+
+    var name: String {
+        rawValue.capitalized
+    }
+
+    func resources(
+        appName: String
+    ) -> ProjectDescription.ResourceFileElements? {
+        switch self {
+        case .core, .model:
+            return nil
+        case .localization:
+            return .resources([
+                "\(appName)/Targets/\(name)/Resources/**"
+            ])
+        }
+    }
+}
+
 let appName = "Appointo"
 let organizationName = "com.codeopolis"
 
-let project = Project(
+let project = Project.app(
     name: appName,
-    targets: [
-        .target(
-            name: appName,
-            destinations: .iOS,
-            product: .app,
-            bundleId: "\(organizationName).\(appName.lowercased())",
-            infoPlist: .extendingDefault(
-                with: [
-                    "UIMainStoryboardFile": "",
-                    "UILaunchStoryboardName": "LaunchScreen",
-                ]
-            ),
-            sources: ["\(appName)/Sources/**"],
-            resources: ["\(appName)/Resources/**"],
-            dependencies: []
-        ),
-        .target(
-            name: "\(appName)Tests",
-            destinations: .iOS,
-            product: .unitTests,
-            bundleId: "\(organizationName).\(appName)Tests",
-            infoPlist: .default,
-            sources: ["\(appName)/Tests/**"],
-            resources: [],
-            dependencies: [.target(name: appName)]
-        ),
-        .target(
-            name: "\(appName)Core",
-            destinations: .iOS,
-            product: .framework,
-            bundleId: "\(organizationName).\(appName.lowercased()).core",
-            sources: ["\(appName)/Targets/Core/Sources/**"]
-        )
-    ]
+    organizationName: organizationName,
+    destinations: .iOS,
+    additionalTargets: Framework.allCases
 )
 
 // MARK: - Helper
@@ -49,7 +41,7 @@ private extension Project {
         name: String,
         organizationName: String,
         destinations: Destinations,
-        additionalTargets: [String]
+        additionalTargets: [Framework]
     ) -> Project {
         var targets = makeAppTargets(
             name: name,
@@ -57,23 +49,24 @@ private extension Project {
             destinations: destinations,
             dependencies: additionalTargets.map {
                 TargetDependency.target(
-                    name: $0
+                    name: $0.name
                 )
             }
         )
 
-//        targets += additionalTargets.flatMap {
-//            makeFrameworkTargets(
-//                name: $0,
-//                organizationName: organizationName,
-//                destinations: destinations
-//            )
-//        }
+        targets += additionalTargets.flatMap {
+            makeFrameworkTargets(
+                framework: $0,
+                appName: appName,
+                organizationName: organizationName,
+                destinations: destinations
+            )
+        }
 
         return Project(
             name: name,
             organizationName: organizationName,
-            targets: []
+            targets: targets
         )
     }
 
@@ -81,18 +74,22 @@ private extension Project {
 
     /// Helper function to create a framework target and an associated unit test target
     private static func makeFrameworkTargets(
-        name: String,
+        framework: Framework,
+        appName: String,
         organizationName: String,
         destinations: Destinations
     ) -> [Target] {
+        let name = framework.name
         let sources: Target = .target(
             name: name,
             destinations: destinations,
             product: .framework,
             bundleId: "\(organizationName).\(name)",
             infoPlist: .default,
-            sources: ["Targets/\(name)/Sources/**"],
-            resources: [],
+            sources: ["\(appName)/Targets/\(name)/Sources/**"],
+            resources: framework.resources(
+                appName: appName
+            ),
             dependencies: []
         )
 
@@ -102,7 +99,7 @@ private extension Project {
             product: .unitTests,
             bundleId: "\(organizationName).\(name)Tests",
             infoPlist: .default,
-            sources: ["Targets/\(name)/Tests/**"],
+            sources: ["\(appName)/Targets/\(name)/Tests/**"],
             resources: [],
             dependencies: [.target(name: name)]
         )
@@ -130,8 +127,8 @@ private extension Project {
             product: .app,
             bundleId: "\(organizationName).\(name)",
             infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Targets/\(name)/Sources/**"],
-            resources: ["Targets/\(name)/Resources/**"],
+            sources: ["\(name)/Sources/**"],
+            resources: ["\(name)/Resources/**"],
             dependencies: dependencies
         )
 
@@ -141,7 +138,7 @@ private extension Project {
             product: .unitTests,
             bundleId: "\(organizationName).\(name)Tests",
             infoPlist: .default,
-            sources: ["Targets/\(name)/Tests/**"],
+            sources: ["\(name)/Tests/**"],
             dependencies: [
                 .target(name: "\(name)"),
             ]
