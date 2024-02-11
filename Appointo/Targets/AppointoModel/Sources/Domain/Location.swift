@@ -1,6 +1,13 @@
 import Foundation
 
-public struct Location: CaseIterable {
+public struct Location: CaseIterable, Identifiable, Equatable {
+    public static func == (
+        lhs: Location,
+        rhs: Location
+    ) -> Bool {
+        lhs.id == rhs.id
+    }
+
     public let id: UUID
     public let name: String
 
