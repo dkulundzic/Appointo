@@ -1,27 +1,55 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
+let appName = "Appointo"
+let organizationName = "com.codeopolis"
+
 enum Framework: String, ProjectDescriptionHelpers.Framework, CaseIterable {
     case core
     case model
+    case ui
     case localization
 
-    func resources(
-        appName: String
-    ) -> ProjectDescription.ResourceFileElements? {
+    var hasResources: Bool {
         switch self {
         case .core, .model:
-            return nil
-        case .localization:
-            return .resources([
-                "\(appName)/Targets/\(name(appName: appName))/Resources/**"
-            ])
+            return false
+        case .ui, .localization:
+            return true
+        }
+    }
+
+    var isTestable: Bool {
+        switch self {
+        case .core, .model, .localization:
+            return true
+        case .ui:
+            return false
+        }
+    }
+
+    var dependencies: [TargetDependency] {
+        switch self {
+        case .core:
+            return []
+        case .model, .localization:
+            return [
+                .target(
+                    name: Framework.core.name(appName: appName)
+                )
+            ]
+        case .ui:
+            return [
+                .target(
+                    name: Framework.core.name(appName: appName)
+                ),
+                .target(
+                    name: Framework.localization.name(appName: appName)
+                )
+            ]
         }
     }
 }
-
-let appName = "Appointo"
-let organizationName = "com.codeopolis"
 
 let project = Project.app(
     name: appName,

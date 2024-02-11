@@ -1,6 +1,10 @@
 import ProjectDescription
 
 public protocol Framework {
+    var hasResources: Bool { get }
+    var isTestable: Bool { get }
+    var dependencies: [TargetDependency] { get }
+
     func name(
         appName: String
     ) -> String
@@ -8,6 +12,22 @@ public protocol Framework {
     func resources(
         appName: String
     ) -> ProjectDescription.ResourceFileElements?
+}
+
+public extension Framework {
+    var hasResources: Bool { false }
+
+    var isTestable: Bool { false }
+
+    var frameworkDependencies: [Self] { [] }
+
+    func resources(
+        appName: String
+    ) -> ProjectDescription.ResourceFileElements? {
+        hasResources ? .resources([
+            "\(appName)/Targets/\(name(appName: appName))/Resources/**"
+        ]) : nil
+    }
 }
 
 public extension Framework where Self: RawRepresentable, RawValue == String {
@@ -26,11 +46,12 @@ public extension Project {
         destinations: Destinations,
         additionalTargets: [Framework]
     ) -> Project {
-        var targets = makeAppTargets(
-            name: name,
-            organizationName: organizationName,
-            destinations: destinations,
-            dependencies: additionalTargets
+        let appDependencies: [TargetDependency] = [
+            [
+                .external(name: "SnapKit"),
+                .external(name: "ComposableArchitecture")
+            ],
+            additionalTargets
                 .map {
                     TargetDependency.target(
                         name: $0.name(
@@ -38,6 +59,13 @@ public extension Project {
                         )
                     )
                 }
+        ].flatMap { $0 }
+
+        var targets = makeAppTargets(
+            name: name,
+            organizationName: organizationName,
+            destinations: destinations,
+            dependencies: appDependencies
         )
 
         targets += additionalTargets.flatMap {
@@ -79,13 +107,11 @@ public extension Project {
             resources: framework.resources(
                 appName: appName
             ),
-            dependencies: [
-                .external(name: "SnapKit"),
-                .external(name: "ComposableArchitecture")
-            ]
+            dependencies: framework.dependencies
         )
 
-        let tests: Target = .target(
+
+        let tests: Target? = framework.isTestable ? .target(
             name: "\(name)Tests",
             destinations: destinations,
             product: .unitTests,
@@ -94,9 +120,10 @@ public extension Project {
             sources: ["\(appName)/Targets/\(name)/Tests/**"],
             resources: [],
             dependencies: [.target(name: name)]
-        )
+        ) : nil
 
         return [sources, tests]
+            .compactMap { $0 }
     }
 
     /// Helper function to create the application target and the unit test target.
