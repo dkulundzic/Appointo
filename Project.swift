@@ -14,7 +14,7 @@ enum Framework: String, ProjectDescriptionHelpers.Framework, CaseIterable {
             return nil
         case .localization:
             return .resources([
-                "\(appName)/Targets/\(name)/Resources/**"
+                "\(appName)/Targets/\(name(appName: appName))/Resources/**"
             ])
         }
     }
