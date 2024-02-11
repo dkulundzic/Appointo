@@ -1,0 +1,64 @@
+disabled_rules:
+- trailing_whitespace # Xcode adds whitespaces for each new line
+- nesting
+- todo
+- function_body_length
+
+opt_in_rules:
+- force_unwrapping
+- empty_count
+- closure_spacing
+- explicit_init
+- fatal_error_message
+- implicitly_unwrapped_optional
+- literal_expression_end_indentation
+- number_separator
+- overridden_super_call
+- private_action
+- prohibited_super_call
+- sorted_first_last
+- unneeded_parentheses_in_closure_argument
+
+cyclomatic_complexity:
+    ignores_case_statements: true
+    warning: 12
+    error: 15
+
+colon:
+  apply_to_dictionaries: false
+
+large_tuple:
+  - 5 # warning
+
+identifier_name:
+  excluded:
+    - id
+    - vc
+    - on
+
+line_length:
+  - 200 # warning
+
+function_parameter_count:
+  - 5 # warning
+  - 7 # error
+
+force_unwrapping:
+  severity: error
+
+type_body_length:
+  - 500 # warning
+
+file_length:
+  - 500 # warning
+  - 800 # error
+
+type_name:
+  max_length:
+    - 50 #warning
+
+excluded:
+  - Tuist
+
+force_try:
+  severity: error # explicitly

@@ -68,7 +68,7 @@ public extension Project {
         let name = framework.name(
             appName: appName
         )
-        
+
         let sources: Target = .target(
             name: name,
             destinations: destinations,
@@ -121,6 +121,21 @@ public extension Project {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["\(name)/Sources/**"],
             resources: ["\(name)/Resources/**"],
+            scripts: [
+                .post(
+                    script: """
+                            export PATH="$PATH:/opt/homebrew/bin"
+
+                            if which swiftlint > /dev/null; then
+                              swiftlint
+                            else
+                              echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+                            fi
+                            """,
+                    name: "SwiftLint",
+                    basedOnDependencyAnalysis: false
+                )
+            ],
             dependencies: dependencies
         )
 
