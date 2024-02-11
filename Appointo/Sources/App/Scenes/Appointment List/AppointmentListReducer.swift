@@ -1,22 +1,35 @@
 import ComposableArchitecture
+import Model
 
 @Reducer
 struct AppointmentListReducer {
+    @Dependency(\.appointmentRepository) private var appointmentRepository
+
+    var body: some Reducer<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .onViewAppeared:
+                return .run { send in
+                    await send(
+                        .onAppointmentsLoaded(
+                            try await appointmentRepository.load()
+                        )
+                    )
+                }
+            case .onAppointmentsLoaded(let appointments):
+                state.appointments = appointments
+                return .none
+            }
+        }
+    }
+
     @ObservableState
     struct State: Equatable {
-        var name = ""
+        var appointments: [Appointment] = []
     }
 
     enum Action {
         case onViewAppeared
-    }
-
-    var body: some Reducer<State, Action> {
-        Reduce { _, action in
-            switch action {
-            case .onViewAppeared:
-                return .none
-            }
-        }
+        case onAppointmentsLoaded(_ appointments: [Appointment])
     }
 }

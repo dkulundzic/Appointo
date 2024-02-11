@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-public protocol AppointmentRepository: Repository { }
+public protocol AppointmentRepository: Repository where Model == Appointment { }
 
 public actor DefaultAppointmentRepository: AppointmentRepository {
     private let objectsSubject = CurrentValueSubject<[Appointment], Never>([])

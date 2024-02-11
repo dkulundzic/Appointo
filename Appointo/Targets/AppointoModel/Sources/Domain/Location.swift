@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Location: CaseIterable, Identifiable, Equatable {
+public struct Location: Identifiable, Equatable {
     public static func == (
         lhs: Location,
         rhs: Location
@@ -19,6 +19,14 @@ public struct Location: CaseIterable, Identifiable, Equatable {
         self.name = name
     }
 
+    public func hash(
+        into hasher: inout Hasher
+    ) {
+        hasher.combine(id)
+    }
+}
+
+extension Location: CaseIterable {
     public static var allCases: [Self] {
         [
             .init(

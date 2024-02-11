@@ -1,6 +1,6 @@
 import UIKit
 
-@main
+@UIApplicationMain
 class AppointoApp: NSObject, UIApplicationDelegate {
     var window: UIWindow?
 
