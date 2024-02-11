@@ -4,7 +4,7 @@ import ComposableArchitecture
 struct AppointmentListReducer {
     @ObservableState
     struct State: Equatable {
-
+        var name = ""
     }
 
     enum Action {
