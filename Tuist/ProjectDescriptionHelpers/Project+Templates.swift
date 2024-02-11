@@ -1,9 +1,8 @@
 import ProjectDescription
 
-public protocol Framework {
+public protocol FrameworkProtocol {
     var hasResources: Bool { get }
     var isTestable: Bool { get }
-    var dependencies: [TargetDependency] { get }
 
     func name(
         appName: String
@@ -11,10 +10,14 @@ public protocol Framework {
 
     func resources(
         appName: String
-    ) -> ProjectDescription.ResourceFileElements?
+    ) -> [ResourceFileElement]
+
+    func dependencies(
+        appName: String
+    ) -> [TargetDependency]
 }
 
-public extension Framework {
+public extension FrameworkProtocol {
     var hasResources: Bool { false }
 
     var isTestable: Bool { false }
@@ -23,18 +26,65 @@ public extension Framework {
 
     func resources(
         appName: String
-    ) -> ProjectDescription.ResourceFileElements? {
-        hasResources ? .resources([
-            "\(appName)/Targets/\(name(appName: appName))/Resources/**"
-        ]) : nil
+    ) -> [ResourceFileElement] {
+        hasResources ? ["\(appName)/Targets/\(name(appName: appName))/Resources/**"] : []
     }
 }
 
-public extension Framework where Self: RawRepresentable, RawValue == String {
+public extension FrameworkProtocol where Self: RawRepresentable, RawValue == String {
     func name(
         appName: String
     ) -> String {
         "\(appName)\(rawValue.capitalized)"
+    }
+}
+
+public enum Framework: String, FrameworkProtocol, CaseIterable {
+    case core
+    case model
+    case ui
+    case localization
+
+    public var hasResources: Bool {
+        switch self {
+        case .core, .model:
+            return false
+        case .ui, .localization:
+            return true
+        }
+    }
+
+    public var isTestable: Bool {
+        switch self {
+        case .core, .model, .localization:
+            return true
+        case .ui:
+            return false
+        }
+    }
+
+    public func dependencies(
+        appName: String
+    ) -> [TargetDependency] {
+        switch self {
+        case .core:
+            return []
+        case .model, .localization:
+            return [
+                .target(
+                    name: Framework.core.name(appName: appName)
+                )
+            ]
+        case .ui:
+            return [
+                .target(
+                    name: Framework.core.name(appName: appName)
+                ),
+                .target(
+                    name: Framework.localization.name(appName: appName)
+                )
+            ]
+        }
     }
 }
 
@@ -104,10 +154,14 @@ public extension Project {
             bundleId: "\(organizationName).\(name)",
             infoPlist: .default,
             sources: ["\(appName)/Targets/\(name)/Sources/**"],
-            resources: framework.resources(
-                appName: appName
+            resources: .resources(
+                framework.resources(
+                    appName: appName
+                )
             ),
-            dependencies: framework.dependencies
+            dependencies: framework.dependencies(
+                appName: appName
+            )
         )
 
 
@@ -140,6 +194,13 @@ public extension Project {
             "UILaunchStoryboardName": "LaunchScreen",
         ]
 
+        let resources: ResourceFileElements = .resources(
+            [
+                ["\(name)/Resources/**"],
+                Framework.ui.resources(appName: name)
+            ].flatMap { $0 }
+        )
+
         let mainTarget = Target.target(
             name: name,
             destinations: destinations,
@@ -147,7 +208,7 @@ public extension Project {
             bundleId: "\(organizationName).\(name)",
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["\(name)/Sources/**"],
-            resources: ["\(name)/Resources/**"],
+            resources: resources,
             scripts: [
                 .post(
                     script: """
