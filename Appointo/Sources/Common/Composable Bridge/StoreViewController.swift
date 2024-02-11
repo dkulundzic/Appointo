@@ -16,14 +16,4 @@ class StoreViewController<Reducer, View>: ViewController<View> where Reducer: Co
     @available(*, unavailable) public required init?(coder: NSCoder) {
         fatalError("Not implemented")
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-    func storeObservation(
-        state: Reducer.State
-    ) {
-        // Overriden by subclasses.
-    }
 }

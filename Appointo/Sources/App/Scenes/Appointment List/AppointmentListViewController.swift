@@ -8,12 +8,4 @@ final class AppointmentListViewController: StoreViewController<AppointmentListRe
 
         store.send(.onViewAppeared)
     }
-
-    override func storeObservation(
-        state: AppointmentListReducer.State
-    ) {
-        super.storeObservation(state: state)
-
-        print("Store observed with state: \(state)")
-    }
 }
