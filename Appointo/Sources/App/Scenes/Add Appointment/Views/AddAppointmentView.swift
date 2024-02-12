@@ -3,6 +3,7 @@ import Combine
 import AppointoUi
 import AppointoCore
 import AppointoModel
+import AppointoLocalization
 
 final class AddAppointmentView: UIView {
     private let selectedDateSubject = PassthroughSubject<Date, Never>()
@@ -28,6 +29,8 @@ final class AddAppointmentView: UIView {
 extension AddAppointmentView {
     var descriptionPublisher: AnyPublisher<String, Never> {
         descriptionTextField.textPublisher
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     var datePublisher: AnyPublisher<Date, Never> {
@@ -38,6 +41,8 @@ extension AddAppointmentView {
 
     var locationSelectionPublisher: AnyPublisher<Location?, Never> {
         locationDropdownView.itemSelection
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }
 
@@ -103,19 +108,20 @@ private extension AddAppointmentView {
     func setupDescriptionTextField() {
         contentStackView.addArrangedSubview(
             FormFieldView(
-                title: "Description",
+                title: AppointoLocalizationStrings.addAppointmentFormFieldDescriptionTitle,
                 content: descriptionTextField
             )
         )
 
-        // TODO: - Localize
-        descriptionTextField.placeholder = "Appointment description"
+        descriptionTextField.placeholder = AppointoLocalizationStrings.addAppointmentFormFieldDescriptionPlaceholder
     }
 
     func setupDatePicker() {
         contentStackView.addArrangedSubview(
-            // TODO: - Localize
-            FormFieldView(title: "Date", content: datePicker)
+            FormFieldView(
+                title: AppointoLocalizationStrings.addAppointmentFormFieldDateTitle,
+                content: datePicker
+            )
         )
 
         datePicker.preferredDatePickerStyle = .compact
@@ -124,7 +130,10 @@ private extension AddAppointmentView {
 
     func setupLocationDropdownView() {
         contentStackView.addArrangedSubview(
-            FormFieldView(title: "Location", content: locationDropdownView)
+            FormFieldView(
+                title: AppointoLocalizationStrings.addAppointmentFormFieldLocationTitle,
+                content: locationDropdownView
+            )
         )
     }
 }

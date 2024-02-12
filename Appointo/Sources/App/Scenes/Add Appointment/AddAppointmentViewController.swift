@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import ComposableArchitecture
+import AppointoLocalization
 
 final class AddAppointmentViewController: StoreViewController<AddAppointmentFeature, AddAppointmentView> {
     private var bag = Set<AnyCancellable>()
@@ -27,8 +28,7 @@ private extension AddAppointmentViewController {
     }
 
     func setupNavigation() {
-        // TODO: - Localize
-        navigationItem.title = "Add Appointment"
+        navigationItem.title = AppointoLocalizationStrings.addAppointmentTitle
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = .init(
             systemItem: .save,

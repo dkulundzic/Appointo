@@ -1,1 +1,9 @@
+// MARK: - Appointment List
 "appointment_list_title" = "Appointo";
+
+// MARK: - Add Appointment
+"add_appointment_title" = "Add Appointment";
+"add_appointment_form_field_description_title" = "Description";
+"add_appointment_form_field_description_placeholder" = "Description";
+"add_appointment_form_field_date_title" = "Date";
+"add_appointment_form_field_location_title" = "Location";
