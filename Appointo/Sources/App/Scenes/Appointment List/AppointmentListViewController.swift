@@ -61,8 +61,8 @@ private extension AppointmentListViewController {
 
         store
             .scope(
-                state: \.addAppointment,
-                action: \.addAppointment.presented
+                state: \.destination?.addAppointment,
+                action: \.destination.addAppointment
             )
             .ifLet(
                 then: { [weak self] store in

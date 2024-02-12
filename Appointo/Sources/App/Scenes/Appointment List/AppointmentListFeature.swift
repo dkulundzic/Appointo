@@ -16,45 +16,61 @@ struct AppointmentListFeature {
                         )
                     )
                 }
-                
-            case .onAddAppointmentButtonTapped:
-                state.addAppointment = .init()
-                return .none
-                
-            case .addAppointment(.presented(.saveButtonTapped)):
-                state.addAppointment = nil
-                return .none
 
-            case .addAppointment(.presented(.dateSelected)):
-                return .none
-
-            case .addAppointment(.presented(.dismissed)):
-                state.addAppointment = nil
-                return .none
-
-            case .addAppointment(.dismiss):
-                state.addAppointment = nil
-                return .none
-                
             case .onAppointmentsLoaded(let appointments):
                 state.appointments = .init(
                     uniqueElements: appointments
                 )
                 return .none
+
+            case .onAddAppointmentButtonTapped:
+                state.destination = .addAppointment(.init())
+                return .none
+
+            case .destination(_):
+                print(#function)
+                return .none
             }
+        }
+        .ifLet(
+            \.$destination,
+             action: \.destination
+        ) {
+            Destination()
         }
     }
 
     @ObservableState
     struct State: Equatable {
-        @Presents var addAppointment: AddAppointmentFeature.State?
+        @Presents var destination: Destination.State?
         var appointments: IdentifiedArrayOf<Appointment> = []
+    }
+
+    @Reducer
+    struct Destination {
+        @ObservableState
+        enum State: Equatable {
+            case addAppointment(AddAppointmentFeature.State)
+        }
+
+        enum Action {
+            case addAppointment(AddAppointmentFeature.Action)
+        }
+
+        var body: some ReducerOf<Self> {
+            Scope(
+                state: \.addAppointment,
+                action: \.addAppointment
+            ) {
+                AddAppointmentFeature()
+            }
+        }
     }
 
     enum Action {
         case onViewAppeared
         case onAppointmentsLoaded(_ appointments: [Appointment])
         case onAddAppointmentButtonTapped
-        case addAppointment(PresentationAction<AddAppointmentFeature.Action>)
+        case destination(PresentationAction<Destination.Action>)
     }
 }

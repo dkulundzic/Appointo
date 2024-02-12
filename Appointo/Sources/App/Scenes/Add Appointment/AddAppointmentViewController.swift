@@ -43,7 +43,7 @@ private extension AddAppointmentViewController {
     func setupView() {
         specializedView.datePublisher
             .sink { [weak self] date in
-                print(date)
+                self?.store.send(.dateSelected(date))
             }
             .store(in: &bag)
     }
