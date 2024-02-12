@@ -11,9 +11,11 @@ struct AddAppointmentFeature {
             switch action {
             case .saveButtonTapped:
                 return .none
+
             case .dateSelected(let date):
                 state.selectedDate = date
                 return .none
+
             case .dismissed:
                 return .none
             }

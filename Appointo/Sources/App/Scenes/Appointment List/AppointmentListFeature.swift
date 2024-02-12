@@ -27,8 +27,15 @@ struct AppointmentListFeature {
                 state.destination = .addAppointment(.init())
                 return .none
 
-            case .destination(_):
-                print(#function)
+            case .destination(.presented(.addAppointment(.dismissed))):
+                state.destination = nil
+                return .none
+            
+            case .destination(.presented(.addAppointment(.saveButtonTapped))):
+                state.destination = nil
+                return .none
+
+            case .destination:
                 return .none
             }
         }
