@@ -26,6 +26,10 @@ final class AddAppointmentView: UIView {
 }
 
 extension AddAppointmentView {
+    var descriptionPublisher: AnyPublisher<String, Never> {
+        descriptionTextField.textPublisher
+    }
+
     var datePublisher: AnyPublisher<Date, Never> {
         selectedDateSubject
             .receive(on: DispatchQueue.main)

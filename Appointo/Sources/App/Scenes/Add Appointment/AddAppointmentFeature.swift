@@ -14,14 +14,17 @@ struct AddAppointmentFeature {
 
             case .descriptionChanged(let description):
                 state.description = description
+                state.validate()
                 return .none
 
             case .dateSelected(let date):
                 state.selectedDate = date
+                state.validate()
                 return .none
 
             case .locationSelected(let location):
                 state.selectedLocation = location
+                state.validate()
                 return .none
 
             case .dismissed:
@@ -32,9 +35,15 @@ struct AddAppointmentFeature {
 
     @ObservableState
     struct State: Equatable {
-        var selectedDate: Date?
+        var selectedDate: Date = .now
         var selectedLocation: Location?
         var description = ""
+        var isFormValid = false
+
+        mutating func validate() {
+            let optionals: [Any?] = [selectedDate, selectedLocation]
+            isFormValid = optionals.allSatisfy { $0 != nil } && !description.isEmpty
+        }
     }
 
     enum Action {

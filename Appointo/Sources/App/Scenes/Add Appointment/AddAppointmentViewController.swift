@@ -41,6 +41,12 @@ private extension AddAppointmentViewController {
     }
 
     func setupView() {
+        specializedView.descriptionPublisher
+            .sink { [weak self] description in
+                self?.store.send(.descriptionChanged(description))
+            }
+            .store(in: &bag)
+
         specializedView.datePublisher
             .sink { [weak self] date in
                 self?.store.send(.dateSelected(date))
@@ -59,6 +65,8 @@ private extension AddAppointmentViewController {
             guard let self else {
                 return
             }
+
+            navigationItem.rightBarButtonItem?.isEnabled = store.isFormValid
         }
     }
 }
