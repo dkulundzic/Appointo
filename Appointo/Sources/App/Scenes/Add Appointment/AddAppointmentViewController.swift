@@ -1,7 +1,10 @@
 import UIKit
+import Combine
 import ComposableArchitecture
 
 final class AddAppointmentViewController: StoreViewController<AddAppointmentFeature, AddAppointmentView> {
+    private var bag = Set<AnyCancellable>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -19,6 +22,11 @@ extension AddAppointmentViewController: UIAdaptivePresentationControllerDelegate
 
 private extension AddAppointmentViewController {
     func setup() {
+        setupNavigation()
+        setupView()
+    }
+
+    func setupNavigation() {
         // TODO: - Localize
         navigationItem.title = "Add Appointment"
         navigationItem.largeTitleDisplayMode = .never
@@ -30,6 +38,14 @@ private extension AddAppointmentViewController {
         )
 
         navigationController?.presentationController?.delegate = self
+    }
+
+    func setupView() {
+        specializedView.datePublisher
+            .sink { [weak self] date in
+                print(date)
+            }
+            .store(in: &bag)
     }
 
     func observeStore() {

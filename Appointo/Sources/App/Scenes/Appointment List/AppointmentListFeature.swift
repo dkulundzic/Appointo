@@ -25,6 +25,9 @@ struct AppointmentListFeature {
                 state.addAppointment = nil
                 return .none
 
+            case .addAppointment(.presented(.dateSelected)):
+                return .none
+
             case .addAppointment(.presented(.dismissed)):
                 state.addAppointment = nil
                 return .none
