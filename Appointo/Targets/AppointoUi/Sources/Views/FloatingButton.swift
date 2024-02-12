@@ -26,19 +26,13 @@ public class FloatingButton: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
-
 }
 
 private extension FloatingButton {
     func setupViews() {
         setupButton()
     }
-    
+
     func setupButton() {
         addSubview(button)
         button.snp.makeConstraints {

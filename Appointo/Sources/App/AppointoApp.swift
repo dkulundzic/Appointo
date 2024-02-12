@@ -21,7 +21,7 @@ private extension AppointoApp {
             let initialViewController = AppointmentListViewController(
                 store: .init(
                     initialState: .init()
-                ) { AppointmentListReducer() }
+                ) { AppointmentListFeature() }
             )
 
             let navigationController = UINavigationController(

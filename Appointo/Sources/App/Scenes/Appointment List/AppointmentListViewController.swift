@@ -3,7 +3,7 @@ import AppointoModel
 import AppointoUi
 import AppointoLocalization
 
-final class AppointmentListViewController: StoreViewController<AppointmentListReducer, AppointmentListView> {
+final class AppointmentListViewController: StoreViewController<AppointmentListFeature, AppointmentListView> {
     private lazy var dataSource = UITableViewDiffableDataSource(
         tableView: specializedView.tableView,
         cellProvider: AppointmentListCellProvider()
@@ -49,7 +49,7 @@ private extension AppointmentListViewController {
             var snapshot = dataSource.snapshot()
             snapshot.deleteAllItems()
             snapshot.appendSections([0])
-            snapshot.appendItems(store.appointments)
+            snapshot.appendItems(store.appointments.elements)
 
             dataSource.apply(snapshot)
         }
