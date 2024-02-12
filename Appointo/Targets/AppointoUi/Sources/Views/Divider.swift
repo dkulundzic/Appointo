@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 open class Divider: UIView {
     public init() {
