@@ -4,7 +4,7 @@ import Combine
 public protocol AppointmentRepository: Repository where Model == Appointment { }
 
 public actor DefaultAppointmentRepository: AppointmentRepository {
-    private let objectsSubject = CurrentValueSubject<[Appointment], Never>([])
+    private let objectsSubject = CurrentValueSubject<[Appointment], Never>(DefaultAppointmentRepository.mock)
 
     public nonisolated var changePublisher: AnyPublisher<[Appointment], Never> {
         objectsSubject.eraseToAnyPublisher()
@@ -54,11 +54,7 @@ private extension DefaultAppointmentRepository {
         (1...10)
             .map { index in
                     .init(
-                        date: .now.addingTimeInterval(
-                            TimeInterval(
-                                index * 60
-                            )
-                        ),
+                        date: Calendar.current.date(byAdding: .day, value: index % 2, to: .now) ?? Date(),
                         location: .allCases[3],
                         description: "Description #\(index)"
                     )

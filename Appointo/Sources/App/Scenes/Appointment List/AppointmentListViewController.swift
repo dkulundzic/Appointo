@@ -6,7 +6,7 @@ import AppointoLocalization
 
 final class AppointmentListViewController: StoreViewController<AppointmentListFeature, AppointmentListView> {
     private var bag = Set<AnyCancellable>()
-    private lazy var dataSource = UITableViewDiffableDataSource(
+    private lazy var dataSource = UITableViewDiffableDataSource<AppointmentListSection, Appointment>(
         tableView: specializedView.tableView,
         cellProvider: AppointmentListCellProvider()
     )
@@ -34,6 +34,18 @@ extension AppointmentListViewController: UITableViewDelegate {
         // TODO: -
         print(#function)
     }
+
+    func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int
+    ) -> UIView? {
+        let section = store.sections.elements[section]
+        let header = tableView.dequeueReusableHeader(
+            AppointmentListSectionHeader.self
+        )
+        header.update(using: section.title)
+        return header
+    }
 }
 
 private extension AppointmentListViewController {
@@ -51,12 +63,16 @@ private extension AppointmentListViewController {
         observe { [weak self] in
             guard let self else { return }
 
-            var snapshot = dataSource.snapshot()
-            snapshot.deleteAllItems()
-            snapshot.appendSections([0])
-            snapshot.appendItems(store.appointments.elements)
+            var snapshot = NSDiffableDataSourceSnapshot<AppointmentListSection, Appointment>()
+            store.sections.forEach { section in
+                snapshot.appendSections([section])
+                snapshot.appendItems(section.appointments.elements, toSection: section)
+            }
 
-            dataSource.apply(snapshot)
+            dataSource.apply(
+                snapshot,
+                animatingDifferences: false
+            )
         }
 
         store

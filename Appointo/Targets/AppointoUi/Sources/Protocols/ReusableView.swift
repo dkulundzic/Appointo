@@ -9,5 +9,3 @@ public extension ReusableView {
         String(describing: Self.self)
     }
 }
-
-extension UITableViewCell: ReusableView { }

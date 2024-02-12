@@ -44,6 +44,7 @@ private extension AppointmentListView {
         tableView.alwaysBounceVertical = true
         tableView.contentInset = .init(top: 20)
         tableView.registerReusableCell(AppointmentListCell.self)
+        tableView.registerReusableHeader(AppointmentListSectionHeader.self)
     }
 
     func setupAddAppointmentButton() {

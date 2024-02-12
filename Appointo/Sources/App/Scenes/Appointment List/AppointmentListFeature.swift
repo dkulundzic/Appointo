@@ -5,6 +5,7 @@ import AppointoModel
 @Reducer
 struct AppointmentListFeature {
     @Dependency(\.appointmentRepository) private var appointmentRepository
+    private let sectionVendor = AppointmentListSectionVendor()
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -26,9 +27,7 @@ struct AppointmentListFeature {
                 })
 
             case .onAppointmentsLoaded(let appointments):
-                state.appointments = .init(
-                    uniqueElements: appointments
-                )
+                state.sections = sectionVendor.sections(for: appointments)
                 return .none
 
             case .onAddAppointmentButtonTapped:
@@ -62,7 +61,7 @@ struct AppointmentListFeature {
     @ObservableState
     struct State: Equatable {
         @Presents var destination: Destination.State?
-        var appointments: IdentifiedArrayOf<Appointment> = []
+        var sections: IdentifiedArrayOf<AppointmentListSection> = []
     }
 
     @Reducer

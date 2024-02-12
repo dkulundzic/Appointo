@@ -1,6 +1,6 @@
 import UIKit
 
-public extension UITableViewDiffableDataSource where SectionIdentifierType == Int {
+public extension UITableViewDiffableDataSource {
     convenience init<Provider>(
         tableView: UITableView,
         cellProvider: Provider

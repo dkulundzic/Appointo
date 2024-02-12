@@ -1,5 +1,6 @@
 import UIKit
 import SnapKit
+import AppointoUi
 
 public final class AppointmentListCell: UITableViewCell {
     private let descriptionLabel = UILabel()
@@ -48,7 +49,7 @@ private extension AppointmentListCell {
     }
 
     func setupDescriptionLabel() {
-        addSubview(descriptionLabel)
+        contentView.addSubview(descriptionLabel)
         descriptionLabel.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(16)
         }
