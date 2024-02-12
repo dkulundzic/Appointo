@@ -4,7 +4,7 @@ public extension UITableView {
     func registerReusableCell<Cell>(
         _ type: Cell.Type
     ) where Cell: ReusableView, Cell: UITableViewCell {
-        self.register(type, forCellReuseIdentifier: "")
+        self.register(type, forCellReuseIdentifier: Cell.reusableIdentifier)
     }
 
     func dequeueReusableCell<Cell>(

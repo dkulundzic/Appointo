@@ -4,7 +4,9 @@ import Combine
 public protocol AppointmentRepository: Repository where Model == Appointment { }
 
 public actor DefaultAppointmentRepository: AppointmentRepository {
-    private let objectsSubject = CurrentValueSubject<[Appointment], Never>([])
+    private let objectsSubject = CurrentValueSubject<[Appointment], Never>(
+        DefaultAppointmentRepository.mock
+    )
 
     public nonisolated var changePublisher: AnyPublisher<[Appointment], Never> {
         objectsSubject.eraseToAnyPublisher()
@@ -15,7 +17,7 @@ public actor DefaultAppointmentRepository: AppointmentRepository {
             objectsSubject.value
         }.value
     }
-    
+
     public func save(
         _ object: Appointment
     ) async throws {
@@ -29,14 +31,14 @@ public actor DefaultAppointmentRepository: AppointmentRepository {
             )
         }
     }
-    
+
     public func delete(
         id: UUID
     ) async throws {
         guard
             let indexOf = objectsSubject.value.firstIndex(where: {
                 $0.id == id
-            }) 
+            })
         else {
             return
         }
@@ -46,5 +48,22 @@ public actor DefaultAppointmentRepository: AppointmentRepository {
                 at: indexOf
             )
         }
+    }
+}
+
+private extension DefaultAppointmentRepository {
+    static var mock: [Model] {
+        (1...10)
+            .map { index in
+                    .init(
+                        date: .now.addingTimeInterval(
+                            TimeInterval(
+                                index * 60
+                            )
+                        ),
+                        location: .allCases[3],
+                        description: "Description #\(index)"
+                    )
+            }
     }
 }

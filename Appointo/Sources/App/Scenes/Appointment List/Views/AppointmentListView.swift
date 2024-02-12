@@ -1,10 +1,11 @@
 import UIKit
 import SnapKit
+import AppointoUi
 
 final class AppointmentListView: UIView {
     let tableView = UITableView(
         frame: .zero,
-        style: .plain
+        style: .insetGrouped
     )
 
     init() {
@@ -28,8 +29,9 @@ private extension AppointmentListView {
         tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        tableView.backgroundColor = .green
+        tableView.backgroundColor = .systemBackground
         tableView.alwaysBounceVertical = true
+        tableView.registerReusableCell(AppointmentListCell.self)
     }
 }
 
