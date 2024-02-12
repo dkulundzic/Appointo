@@ -4,7 +4,7 @@ import Combine
 public protocol AppointmentRepository: Repository where Model == Appointment { }
 
 public actor DefaultAppointmentRepository: AppointmentRepository {
-    private let objectsSubject = CurrentValueSubject<[Appointment], Never>(DefaultAppointmentRepository.mock)
+    private let objectsSubject = CurrentValueSubject<[Appointment], Never>([])
 
     public nonisolated var changePublisher: AnyPublisher<[Appointment], Never> {
         objectsSubject.eraseToAnyPublisher()

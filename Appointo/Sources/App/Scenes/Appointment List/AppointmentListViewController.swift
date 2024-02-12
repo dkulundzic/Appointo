@@ -31,8 +31,11 @@ extension AppointmentListViewController: UITableViewDelegate {
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
-        // TODO: -
-        print(#function)
+        store.send(
+            .onAppointmentListItemTapped(
+                indexPath
+            )
+        )
     }
 
     func tableView(
@@ -63,7 +66,19 @@ private extension AppointmentListViewController {
         observe { [weak self] in
             guard let self else { return }
 
-            var snapshot = NSDiffableDataSourceSnapshot<AppointmentListSection, Appointment>()
+            let dataSource = self.dataSource
+            var snapshot = dataSource.snapshot()
+            
+            let numberOfSections = dataSource.numberOfSections(
+                in: specializedView.tableView
+            )
+
+            let sections = (0...numberOfSections)
+                .compactMap { dataSource.sectionIdentifier(for: $0) }
+
+            snapshot.deleteSections(sections)
+            snapshot.deleteAllItems()
+
             store.sections.forEach { section in
                 snapshot.appendSections([section])
                 snapshot.appendItems(section.appointments.elements, toSection: section)

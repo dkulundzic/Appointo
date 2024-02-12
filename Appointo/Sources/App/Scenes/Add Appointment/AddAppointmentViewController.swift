@@ -19,6 +19,12 @@ extension AddAppointmentViewController: UIAdaptivePresentationControllerDelegate
     ) {
         store.send(.dismissed)
     }
+
+    func presentationControllerShouldDismiss(
+        _ presentationController: UIPresentationController
+    ) -> Bool {
+        store.isFormValid
+    }
 }
 
 private extension AddAppointmentViewController {
@@ -28,12 +34,13 @@ private extension AddAppointmentViewController {
     }
 
     func setupNavigation() {
-        navigationItem.title = AppointoLocalizationStrings.addAppointmentTitle
+        navigationItem.title = store.mode.isEditing ? AppointoLocalizationStrings.addAppointmentEditingTitle :
+            AppointoLocalizationStrings.addAppointmentDefaultTitle
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.leftBarButtonItem = .init(
             systemItem: .cancel,
             primaryAction: .init { [weak self] _ in
-                self?.store.send(.saveButtonTapped)
+                self?.store.send(.cancelButtonTapped)
             }
         )
         navigationItem.rightBarButtonItem = .init(
@@ -73,6 +80,10 @@ private extension AddAppointmentViewController {
             }
 
             navigationItem.rightBarButtonItem?.isEnabled = store.isFormValid
+
+            specializedView.appointmentDescription = store.description
+            specializedView.location = store.selectedLocation
+            specializedView.selectedDate = store.selectedDate
         }
     }
 }

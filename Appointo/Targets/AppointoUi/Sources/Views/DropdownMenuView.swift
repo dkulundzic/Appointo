@@ -7,7 +7,7 @@ public protocol DropdownMenuViewItem: Hashable {
 }
 
 open class DropdownMenuView<Item>: UIView where Item: DropdownMenuViewItem {
-    @Published private var selectedItem: Item?
+    @Published public var selectedItem: Item?
     private var bag = Set<AnyCancellable>()
     private let items: [Item]
     private let stackView = UIStackView()
@@ -30,12 +30,6 @@ open class DropdownMenuView<Item>: UIView where Item: DropdownMenuViewItem {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-public extension DropdownMenuView {
-    var itemSelection: AnyPublisher<Item?, Never> {
-        $selectedItem.eraseToAnyPublisher()
     }
 }
 

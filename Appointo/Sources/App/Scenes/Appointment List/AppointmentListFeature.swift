@@ -31,7 +31,22 @@ struct AppointmentListFeature {
                 return .none
 
             case .onAddAppointmentButtonTapped:
-                state.destination = .addAppointment(.init())
+                state.destination = .addAppointment(
+                    .init(mode: .creation)
+                )
+                return .none
+
+            case .onAppointmentListItemTapped(let indexPath):
+                let appointment = state.sections
+                    .elements[indexPath.section]
+                    .appointments[indexPath.row]
+
+                state.destination = .addAppointment(
+                    .init(
+                        mode: .edit(appointment)
+                    )
+                )
+
                 return .none
 
             case .destination(.presented(.addAppointment(.dismissed))):
@@ -87,8 +102,9 @@ struct AppointmentListFeature {
 
     enum Action {
         case onViewAppeared
-        case onAppointmentsLoaded(_ appointments: [Appointment])
+        case onAppointmentsLoaded([Appointment])
         case onAddAppointmentButtonTapped
+        case onAppointmentListItemTapped(IndexPath)
         case destination(PresentationAction<Destination.Action>)
     }
 }

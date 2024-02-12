@@ -59,14 +59,48 @@ struct AddAppointmentFeature {
 
     @ObservableState
     struct State: Equatable {
-        var selectedDate: Date = .now
-        var selectedLocation: Location?
-        var description = ""
         var isFormValid = false
+        var selectedDate: Date
+        var selectedLocation: Location?
+        var description: String
+        let mode: Mode
+
+        init(
+            mode: Mode
+        ) {
+            self.mode = mode
+
+            switch mode {
+            case .creation:
+                selectedDate = .now
+                description = ""
+
+            case .edit(let appointment):
+                selectedDate = appointment.date
+                selectedLocation = appointment.location
+                description = appointment.description
+            }
+
+            validate()
+        }
 
         mutating func validate() {
             let optionals: [Any?] = [selectedDate, selectedLocation]
             isFormValid = optionals.allSatisfy { $0 != nil } && !description.isEmpty
+        }
+
+        enum Mode: Equatable {
+            case creation
+            case edit(Appointment)
+
+            var isEditing: Bool {
+                switch self {
+                case .creation:
+                    return false
+                case .edit:
+                    return true
+                }
+            }
         }
     }
 

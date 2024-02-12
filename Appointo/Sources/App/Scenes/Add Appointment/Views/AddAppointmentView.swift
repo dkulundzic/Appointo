@@ -27,6 +27,21 @@ final class AddAppointmentView: UIView {
 }
 
 extension AddAppointmentView {
+    var appointmentDescription: String? {
+        get { descriptionTextField.text }
+        set { descriptionTextField.text = newValue }
+    }
+
+    var selectedDate: Date {
+        get { datePicker.date }
+        set { datePicker.date = newValue }
+    }
+
+    var location: Location? {
+        get { locationDropdownView.selectedItem }
+        set { locationDropdownView.selectedItem = newValue }
+    }
+
     var descriptionPublisher: AnyPublisher<String, Never> {
         descriptionTextField.textPublisher
             .receive(on: DispatchQueue.main)
@@ -40,7 +55,7 @@ extension AddAppointmentView {
     }
 
     var locationSelectionPublisher: AnyPublisher<Location?, Never> {
-        locationDropdownView.itemSelection
+        locationDropdownView.$selectedItem
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
