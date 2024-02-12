@@ -1,4 +1,5 @@
 import UIKit
+import AppointoCore
 
 @UIApplicationMain
 class AppointoApp: NSObject, UIApplicationDelegate {
@@ -8,18 +9,37 @@ class AppointoApp: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        let initialViewController = AppointmentListViewController(
-            store: .init(
-                initialState: .init()
-            ) { AppointmentListReducer() }
-        )
-
-        window = UIWindow()
-        window?.rootViewController = UINavigationController(
-            rootViewController: initialViewController
-        )
-        window?.makeKeyAndVisible()
+        boostrap()
 
         return true
+    }
+}
+
+private extension AppointoApp {
+    func boostrap() {
+        func setUpWindow() {
+            let initialViewController = AppointmentListViewController(
+                store: .init(
+                    initialState: .init()
+                ) { AppointmentListReducer() }
+            )
+
+            let navigationController = UINavigationController(
+                rootViewController: initialViewController
+            )
+            navigationController.navigationBar.prefersLargeTitles = true
+
+            window = UIWindow()
+            window?.rootViewController = navigationController
+            window?.makeKeyAndVisible()
+        }
+
+        func runStartupProcesses() {
+            StartupProcessService()
+                .run(AppearanceStartupProcess())
+        }
+
+        runStartupProcesses()
+        setUpWindow()
     }
 }

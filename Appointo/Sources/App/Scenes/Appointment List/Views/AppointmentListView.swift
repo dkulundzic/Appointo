@@ -29,8 +29,9 @@ private extension AppointmentListView {
         tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        tableView.backgroundColor = .systemBackground
+        tableView.backgroundColor = .systemGroupedBackground
         tableView.alwaysBounceVertical = true
+        tableView.contentInset = .init(top: 20)
         tableView.registerReusableCell(AppointmentListCell.self)
     }
 }
