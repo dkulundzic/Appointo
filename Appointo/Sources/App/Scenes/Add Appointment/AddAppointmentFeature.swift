@@ -10,6 +10,27 @@ struct AddAppointmentFeature {
         Reduce { state, action in
             switch action {
             case .saveButtonTapped:
+                guard
+                    let selectedLocation = state.selectedLocation
+                else {
+                    return .none
+                }
+
+                return .run { [date = state.selectedDate, description = state.description] send in
+                    let appointment = Appointment(
+                        date: date,
+                        location: selectedLocation,
+                        description: description
+                    )
+
+                    try await appointmentRepository.save(
+                        appointment
+                    )
+
+                    await send(.appointmentSaved(appointment))
+                }
+
+            case .appointmentSaved:
                 return .none
 
             case .descriptionChanged(let description):
@@ -48,6 +69,7 @@ struct AddAppointmentFeature {
 
     enum Action {
         case saveButtonTapped
+        case appointmentSaved(Appointment)
         case dateSelected(Date)
         case locationSelected(Location?)
         case descriptionChanged(String)

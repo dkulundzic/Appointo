@@ -35,6 +35,10 @@ struct AppointmentListFeature {
                 state.destination = nil
                 return .none
 
+            case .destination(.presented(.addAppointment(.appointmentSaved(let appointment)))):
+                state.destination = nil
+                return .none
+
             case .destination:
                 return .none
             }
