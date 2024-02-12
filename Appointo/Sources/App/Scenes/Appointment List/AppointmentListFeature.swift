@@ -1,3 +1,4 @@
+import Foundation
 import ComposableArchitecture
 import AppointoModel
 
@@ -16,6 +17,13 @@ struct AppointmentListFeature {
                         )
                     )
                 }
+                .merge(with: .publisher {
+                    appointmentRepository.changePublisher
+                        .receive(on: DispatchQueue.main)
+                        .map {
+                            .onAppointmentsLoaded($0)
+                        }
+                })
 
             case .onAppointmentsLoaded(let appointments):
                 state.appointments = .init(
@@ -35,7 +43,7 @@ struct AppointmentListFeature {
                 state.destination = nil
                 return .none
 
-            case .destination(.presented(.addAppointment(.appointmentSaved(let appointment)))):
+            case .destination(.presented(.addAppointment(.cancelButtonTapped))):
                 state.destination = nil
                 return .none
 

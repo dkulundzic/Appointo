@@ -30,6 +30,12 @@ private extension AddAppointmentViewController {
     func setupNavigation() {
         navigationItem.title = AppointoLocalizationStrings.addAppointmentTitle
         navigationItem.largeTitleDisplayMode = .never
+        navigationItem.leftBarButtonItem = .init(
+            systemItem: .cancel,
+            primaryAction: .init { [weak self] _ in
+                self?.store.send(.saveButtonTapped)
+            }
+        )
         navigationItem.rightBarButtonItem = .init(
             systemItem: .save,
             primaryAction: .init { [weak self] _ in

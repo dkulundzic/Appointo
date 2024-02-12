@@ -9,6 +9,9 @@ struct AddAppointmentFeature {
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
+            case .cancelButtonTapped:
+                return .none
+
             case .saveButtonTapped:
                 guard
                     let selectedLocation = state.selectedLocation
@@ -69,6 +72,7 @@ struct AddAppointmentFeature {
 
     enum Action {
         case saveButtonTapped
+        case cancelButtonTapped
         case appointmentSaved(Appointment)
         case dateSelected(Date)
         case locationSelected(Location?)

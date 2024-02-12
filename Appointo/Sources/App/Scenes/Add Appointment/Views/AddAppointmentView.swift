@@ -125,6 +125,7 @@ private extension AddAppointmentView {
         )
 
         datePicker.preferredDatePickerStyle = .compact
+        datePicker.minuteInterval = 15
         datePicker.addTarget(self, action: #selector(dateSelected), for: .valueChanged)
     }
 
