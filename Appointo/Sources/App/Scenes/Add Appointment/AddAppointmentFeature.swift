@@ -4,7 +4,7 @@ import AppointoModel
 @Reducer
 struct AddAppointmentFeature {
     @Dependency(\.appointmentRepository) private var appointmentRepository
-    
+
     var body: some Reducer<State, Action> {
         Reduce { _, _ in
             .none
@@ -15,6 +15,7 @@ struct AddAppointmentFeature {
     struct State: Equatable { }
 
     enum Action {
-        case save(appointment: Appointment)
+        case saveButtonTapped
+        case dismissed
     }
 }

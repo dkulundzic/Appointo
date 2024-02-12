@@ -1,9 +1,11 @@
 import UIKit
+import Combine
 import AppointoModel
 import AppointoUi
 import AppointoLocalization
 
 final class AppointmentListViewController: StoreViewController<AppointmentListFeature, AppointmentListView> {
+    private var bag = Set<AnyCancellable>()
     private lazy var dataSource = UITableViewDiffableDataSource(
         tableView: specializedView.tableView,
         cellProvider: AppointmentListCellProvider()
@@ -40,6 +42,9 @@ private extension AppointmentListViewController {
         navigationItem.largeTitleDisplayMode = .always
 
         specializedView.tableView.delegate = self
+        specializedView.addAppointmentTapped = { [weak self] in
+            self?.store.send(.onAddAppointmentButtonTapped)
+        }
     }
 
     func observeStore() {
@@ -53,5 +58,23 @@ private extension AppointmentListViewController {
 
             dataSource.apply(snapshot)
         }
+
+        store
+            .scope(
+                state: \.addAppointment,
+                action: \.addAppointment.presented
+            )
+            .ifLet(
+                then: { [weak self] store in
+                    let addAppointment = UINavigationController(
+                        rootViewController: AddAppointmentViewController(store: store)
+                    )
+                    self?.present(addAppointment, animated: true)
+                },
+                else: { [weak self] in
+                    self?.dismiss(animated: true)
+                }
+            )
+            .store(in: &bag)
     }
 }

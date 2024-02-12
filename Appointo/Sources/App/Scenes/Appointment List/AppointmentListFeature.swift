@@ -16,28 +16,29 @@ struct AppointmentListFeature {
                         )
                     )
                 }
-
+                
             case .onAddAppointmentButtonTapped:
                 state.addAppointment = .init()
                 return .none
-
-            case .addAppointment(.presented(.save(_))):
+                
+            case .addAppointment(.presented(.saveButtonTapped)):
+                state.addAppointment = nil
                 return .none
-            
+
+            case .addAppointment(.presented(.dismissed)):
+                state.addAppointment = nil
+                return .none
+
             case .addAppointment(.dismiss):
+                state.addAppointment = nil
                 return .none
-
+                
             case .onAppointmentsLoaded(let appointments):
                 state.appointments = .init(
                     uniqueElements: appointments
                 )
                 return .none
             }
-        }
-        .ifLet(
-            \.$addAppointment, action: \.addAppointment
-        ) {
-            AddAppointmentFeature()
         }
     }
 

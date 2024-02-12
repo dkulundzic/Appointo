@@ -12,11 +12,6 @@ private extension AppearanceStartupProcess {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white
-        appearance.titleTextAttributes = [
-            .font: UIFont.preferredFont(
-                forTextStyle: .title2
-            )
-        ]
         appearance.largeTitleTextAttributes = [
             .font: UIFont.preferredFont(
                 forTextStyle: .largeTitle
