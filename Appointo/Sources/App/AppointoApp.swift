@@ -36,10 +36,14 @@ private extension AppointoApp {
 
         func runStartupProcesses() {
             StartupProcessService()
-                .run(AppearanceStartupProcess())
+                .run(
+                    AppearanceStartupProcess(
+                        window: window
+                    )
+                )
         }
 
-        runStartupProcesses()
         setUpWindow()
+        runStartupProcesses()
     }
 }

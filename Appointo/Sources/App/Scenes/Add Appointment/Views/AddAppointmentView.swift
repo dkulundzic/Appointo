@@ -9,7 +9,7 @@ final class AddAppointmentView: UIView {
     private let contentView = UIView()
     private let contentContainerView = UIView()
     private let contentStackView = UIStackView()
-    private let descriptionTextField = TextField()
+    private let descriptionTextField = UITextField()
     private let datePicker = UIDatePicker()
 
     init() {
