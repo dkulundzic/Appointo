@@ -18,9 +18,15 @@ struct AddAppointmentFeature {
                 else {
                     return .none
                 }
-
-                return .run { [date = state.selectedDate, description = state.description] send in
+                
+                // swiftlint:disable closure_parameter_position
+                return .run { [
+                    date = state.selectedDate,
+                    description = state.description,
+                    editedApointmentId = state.mode.editedAppointment?.id
+                ] send in
                     let appointment = Appointment(
+                        id: editedApointmentId,
                         date: date,
                         location: selectedLocation,
                         description: description
@@ -32,6 +38,7 @@ struct AddAppointmentFeature {
 
                     await send(.appointmentSaved(appointment))
                 }
+                // swiftlint:enable closure_parameter_position
 
             case .appointmentSaved:
                 return .none
@@ -99,6 +106,15 @@ struct AddAppointmentFeature {
                     return false
                 case .edit:
                     return true
+                }
+            }
+
+            var editedAppointment: Appointment? {
+                switch self {
+                case .creation:
+                    return nil
+                case .edit(let appointment):
+                    return appointment
                 }
             }
         }
