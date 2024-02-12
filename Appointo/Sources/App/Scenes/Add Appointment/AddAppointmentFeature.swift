@@ -20,6 +20,10 @@ struct AddAppointmentFeature {
                 state.selectedDate = date
                 return .none
 
+            case .locationSelected(let location):
+                state.selectedLocation = location
+                return .none
+
             case .dismissed:
                 return .none
             }
@@ -29,12 +33,14 @@ struct AddAppointmentFeature {
     @ObservableState
     struct State: Equatable {
         var selectedDate: Date?
+        var selectedLocation: Location?
         var description = ""
     }
 
     enum Action {
         case saveButtonTapped
         case dateSelected(Date)
+        case locationSelected(Location?)
         case descriptionChanged(String)
         case dismissed
     }

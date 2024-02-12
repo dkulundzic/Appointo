@@ -46,6 +46,12 @@ private extension AddAppointmentViewController {
                 self?.store.send(.dateSelected(date))
             }
             .store(in: &bag)
+
+        specializedView.locationSelectionPublisher
+            .sink { [weak self] location in
+                self?.store.send(.locationSelected(location))
+            }
+            .store(in: &bag)
     }
 
     func observeStore() {

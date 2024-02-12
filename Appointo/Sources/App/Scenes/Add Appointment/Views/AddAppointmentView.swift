@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import AppointoUi
 import AppointoCore
+import AppointoModel
 
 final class AddAppointmentView: UIView {
     private let selectedDateSubject = PassthroughSubject<Date, Never>()
@@ -11,6 +12,7 @@ final class AddAppointmentView: UIView {
     private let contentStackView = UIStackView()
     private let descriptionTextField = UITextField()
     private let datePicker = UIDatePicker()
+    private let locationDropdownView = DropdownMenuView(items: Location.allCases)
 
     init() {
         super.init(frame: .zero)
@@ -28,6 +30,10 @@ extension AddAppointmentView {
         selectedDateSubject
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
+    }
+
+    var locationSelectionPublisher: AnyPublisher<Location?, Never> {
+        locationDropdownView.itemSelection
     }
 }
 
@@ -50,6 +56,7 @@ private extension AddAppointmentView {
         setupContentStackView()
         setupDescriptionTextField()
         setupDatePicker()
+        setupLocationDropdownView()
     }
 
     func setupScrollView() {
@@ -72,7 +79,6 @@ private extension AddAppointmentView {
         contentView.addSubview(contentContainerView)
         contentContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(20)
-            $0.height.greaterThanOrEqualTo(300)
         }
         contentContainerView.backgroundColor = .white
         contentContainerView.layer.cornerRadius = 16
@@ -110,6 +116,12 @@ private extension AddAppointmentView {
 
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(dateSelected), for: .valueChanged)
+    }
+
+    func setupLocationDropdownView() {
+        contentStackView.addArrangedSubview(
+            FormFieldView(title: "Location", content: locationDropdownView)
+        )
     }
 }
 
