@@ -17,3 +17,31 @@ The project uses [The Composable Architecture](https://github.com/pointfreeco/sw
 Using TCA, the Appointo app has 2 features:
 1. The `AppointmentListFeature` - displays available appointments
 2. The `AddEditAppointmentFeature` - enables users to create, edit or delete appointments
+
+## Project modularity
+
+Appointo uses four frameworks to modularize the codebase and allow easy access to reusable code:
+1. `AppointoCore`
+2. `AppointoModel`
+2. `AppointoLocalization`
+2. `AppointoUi`
+
+### AppointoCore
+
+Defines the lowest level types.
+
+### AppointoModel
+
+Defines domain types, validators and transformation tools related to the model layer.
+
+### AppointoLocalization
+
+Holds all localization related resources. Can be imported to access all localization assets.
+
+### AppointoUi
+
+All UI related functionality, such as `UIView` subclasses, image and color assets, and similar.
+
+## Strongly-typed asset interface generation
+
+Tuist uses [Swiftgen](https://github.com/SwiftGen/SwiftGen) internally, which is run on each `tuist generate` command; creates an strongly-typed interface to images, colors and localization strings.
