@@ -37,8 +37,8 @@ struct AppointmentListFeature {
                 return .none
 
             case .onAppointmentListItemTapped(let indexPath):
-                let appointment = state.sections
-                    .elements[indexPath.section]
+                let appointment = state
+                    .sections[indexPath.section]
                     .appointments[indexPath.row]
 
                 state.destination = .addAppointment(
@@ -76,7 +76,7 @@ struct AppointmentListFeature {
     @ObservableState
     struct State: Equatable {
         @Presents var destination: Destination.State?
-        var sections: IdentifiedArrayOf<AppointmentListSection> = []
+        var sections: [AppointmentListSection] = []
     }
 
     @Reducer

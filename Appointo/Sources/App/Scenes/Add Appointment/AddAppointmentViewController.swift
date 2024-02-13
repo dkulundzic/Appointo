@@ -79,7 +79,13 @@ private extension AddAppointmentViewController {
                 return
             }
 
-            navigationItem.rightBarButtonItem?.isEnabled = store.isFormValid
+            navigationItem
+                .leftBarButtonItem?
+                .isEnabled = store.mode.isEditing ? store.isFormValid : true
+
+            navigationItem
+                .rightBarButtonItem?
+                .isEnabled = store.isFormValid
 
             specializedView.appointmentDescription = store.description
             specializedView.location = store.selectedLocation

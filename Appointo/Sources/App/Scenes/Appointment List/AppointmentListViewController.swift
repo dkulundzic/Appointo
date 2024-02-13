@@ -42,7 +42,7 @@ extension AppointmentListViewController: UITableViewDelegate {
         _ tableView: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
-        let section = store.sections.elements[section]
+        let section = store.sections[section]
         let header = tableView.dequeueReusableHeader(
             AppointmentListSectionHeader.self
         )
@@ -56,6 +56,8 @@ private extension AppointmentListViewController {
         navigationItem.title = AppointoLocalizationStrings.appointmentListTitle
         navigationItem.largeTitleDisplayMode = .always
 
+        dataSource.defaultRowAnimation = .fade
+
         specializedView.tableView.delegate = self
         specializedView.addAppointmentTapped = { [weak self] in
             self?.store.send(.onAddAppointmentButtonTapped)
@@ -66,27 +68,16 @@ private extension AppointmentListViewController {
         observe { [weak self] in
             guard let self else { return }
 
-            let dataSource = self.dataSource
-            var snapshot = dataSource.snapshot()
-            
-            let numberOfSections = dataSource.numberOfSections(
-                in: specializedView.tableView
-            )
-
-            let sections = (0...numberOfSections)
-                .compactMap { dataSource.sectionIdentifier(for: $0) }
-
-            snapshot.deleteSections(sections)
-            snapshot.deleteAllItems()
-
+            var snapshot = NSDiffableDataSourceSnapshot<AppointmentListSection, Appointment>()
             store.sections.forEach { section in
                 snapshot.appendSections([section])
-                snapshot.appendItems(section.appointments.elements, toSection: section)
+                snapshot.appendItems(
+                    section.appointments, toSection: section
+                )
             }
 
             dataSource.apply(
-                snapshot,
-                animatingDifferences: false
+                snapshot, animatingDifferences: true
             )
         }
 

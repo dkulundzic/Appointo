@@ -8,7 +8,7 @@ struct AppointmentListSection: Hashable, Identifiable {
     }
     
     let title: String
-    let appointments: IdentifiedArrayOf<Appointment>
+    let appointments: [Appointment]
 
     func hash(
         into hasher: inout Hasher

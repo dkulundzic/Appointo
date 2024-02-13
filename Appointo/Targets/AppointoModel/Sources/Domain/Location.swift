@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Location: Identifiable, Equatable {
+public struct Location: Identifiable, Hashable {
     public static func == (
         lhs: Location,
         rhs: Location

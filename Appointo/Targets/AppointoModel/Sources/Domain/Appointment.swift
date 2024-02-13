@@ -24,10 +24,4 @@ public struct Appointment: Identifiable, Equatable, Hashable {
         self.location = location
         self.description = description
     }
-
-    public func hash(
-        into hasher: inout Hasher
-    ) {
-        hasher.combine(id)
-    }
 }

@@ -12,7 +12,7 @@ struct AppointmentListSectionVendor {
 
     func sections(
         for appointments: [Appointment]
-    ) -> IdentifiedArrayOf<AppointmentListSection> {
+    ) -> [AppointmentListSection] {
         let grouped = Dictionary(
             grouping: appointments
         ) { appointment in
@@ -22,7 +22,7 @@ struct AppointmentListSectionVendor {
             )
         }
 
-        let sections = grouped
+        return grouped
             .sorted {
                 guard
                     let lhs = $0.key.day,
@@ -30,7 +30,7 @@ struct AppointmentListSectionVendor {
                 else {
                     return true
                 }
-
+                
                 return lhs < rhs
             }
             .compactMap { key, value -> AppointmentListSection? in
@@ -42,14 +42,8 @@ struct AppointmentListSectionVendor {
 
                 return .init(
                     title: Self.formatter.string(from: date),
-                    appointments: .init(
-                        uniqueElements: value
-                    )
+                    appointments: value
                 )
             }
-
-        return .init(
-            uniqueElements: sections
-        )
     }
 }

@@ -19,14 +19,15 @@ public actor DefaultAppointmentRepository: AppointmentRepository {
     public func save(
         _ object: Appointment
     ) async throws {
-        guard !objectsSubject.value.contains(object) else {
-            return
-        }
-
         Task {
-            objectsSubject.value.append(
-                object
-            )
+            if let indexOf = objectsSubject
+                    .value.firstIndex(of: object) {
+                objectsSubject.value[indexOf] = object
+            } else {
+                objectsSubject.value.append(
+                    object
+                )
+            }
         }
     }
 
