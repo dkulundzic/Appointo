@@ -5,6 +5,7 @@ import AppointoCore
 
 final class AppointmentListView: UIView {
     var addAppointmentTapped: Action?
+    private let emptyListBackgroundView = EmptyStateBackgroundView()
 
     let tableView = UITableView(
         frame: .zero,
@@ -29,10 +30,32 @@ final class AppointmentListView: UIView {
     }
 }
 
+extension AppointmentListView {
+    var isEmptyListBackgroundViewHidden: Bool {
+        get { emptyListBackgroundView.isHidden }
+        set { emptyListBackgroundView.isHidden = newValue }
+    }
+}
+
 private extension AppointmentListView {
     func setupViews() {
+        backgroundColor = .systemGroupedBackground
+        setupEmptyListBackgroundView()
         setupTableView()
         setupAddEditAppointmentButton()
+    }
+
+    func setupEmptyListBackgroundView() {
+        addSubview(emptyListBackgroundView)
+        emptyListBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        emptyListBackgroundView.update(
+            using: .init(
+                title: "No appointments",
+                subtitle: "Add your first appointment with the + button."
+            )
+        )
     }
 
     func setupTableView() {
@@ -40,8 +63,8 @@ private extension AppointmentListView {
         tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        tableView.backgroundColor = .systemGroupedBackground
         tableView.alwaysBounceVertical = true
+        tableView.backgroundColor = .clear
         tableView.contentInset = .init(top: 20)
         tableView.registerReusableCell(AppointmentListCell.self)
         tableView.registerReusableHeader(AppointmentListSectionHeader.self)

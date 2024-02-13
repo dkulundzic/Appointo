@@ -68,12 +68,7 @@ struct AddEditAppointmentFeature {
             case .onAppointmentSaved:
                 return .none
 
-            case .onAppointmentDeletionResult(.success):
-                print(action, "Success")
-                return .none
-
-            case .onAppointmentDeletionResult(.failure(let error)):
-                print(action, error)
+            case .onAppointmentDeletionResult:
                 return .none
 
             case .onDescriptionChanged(let description):

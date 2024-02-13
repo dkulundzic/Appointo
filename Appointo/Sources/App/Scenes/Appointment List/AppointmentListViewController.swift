@@ -79,6 +79,8 @@ private extension AppointmentListViewController {
             dataSource.apply(
                 snapshot, animatingDifferences: true
             )
+
+            specializedView.isEmptyListBackgroundViewHidden = !store.sections.isEmpty
         }
 
         store
