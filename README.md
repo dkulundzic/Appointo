@@ -45,3 +45,8 @@ All UI related functionality, such as `UIView` subclasses, image and color asset
 ## Strongly-typed asset interface generation
 
 Tuist uses [Swiftgen](https://github.com/SwiftGen/SwiftGen) internally, which is run on each `tuist generate` command; creates an strongly-typed interface to images, colors and localization strings.
+
+## Notes
+
+1. The persistence is in-memory only, as it should be enough for demonstration purposes.
+2. The appointment deletion action could use an alert, but I think the current approach is good enough for demo purposes.
