@@ -69,12 +69,21 @@ public enum Framework: String, FrameworkProtocol, CaseIterable {
         switch self {
         case .core:
             return []
-        case .model, .localization:
+        case .model:
+            return [
+                .target(
+                    name: Framework.core.name(appName: appName)
+                ),
+                .external(name: "ComposableArchitecture")
+            ]
+
+        case .localization:
             return [
                 .target(
                     name: Framework.core.name(appName: appName)
                 )
             ]
+            
         case .ui:
             return [
                 .target(
