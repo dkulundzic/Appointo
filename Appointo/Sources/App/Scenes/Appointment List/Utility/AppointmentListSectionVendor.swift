@@ -2,7 +2,13 @@ import Foundation
 import ComposableArchitecture
 import AppointoModel
 
-struct AppointmentListSectionVendor {
+protocol AppointmentListSectionVendor {
+    func sections(
+        for appointments: [Appointment]
+    ) -> [AppointmentListSection]
+}
+
+struct DefaultAppointmentListSectionVendor: AppointmentListSectionVendor {
     private static var formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short

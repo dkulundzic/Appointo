@@ -5,7 +5,7 @@ import AppointoModel
 @Reducer
 struct AppointmentListFeature {
     @Dependency(\.appointmentRepository) private var appointmentRepository
-    private let sectionVendor = AppointmentListSectionVendor()
+    @Dependency(\.appointmentListSectionVendor) private var sectionVendor
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
