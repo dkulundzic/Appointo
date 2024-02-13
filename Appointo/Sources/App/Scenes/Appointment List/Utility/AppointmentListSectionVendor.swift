@@ -13,6 +13,7 @@ struct DefaultAppointmentListSectionVendor: AppointmentListSectionVendor {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .none
+        formatter.doesRelativeDateFormatting = true
         return formatter
     }()
 
