@@ -53,7 +53,15 @@ struct AppointmentListFeature {
                 state.destination = nil
                 return .none
             
-            case .destination(.presented(.addAppointment(.onSaveButtonTapped))):
+            case .destination(.presented(.addAppointment(.onAppointmentSaved))):
+                state.destination = nil
+                return .none
+
+            case .destination(
+                .presented(
+                    .addAppointment(.onAppointmentDeletionResult(.success))
+                )
+            ):
                 state.destination = nil
                 return .none
 

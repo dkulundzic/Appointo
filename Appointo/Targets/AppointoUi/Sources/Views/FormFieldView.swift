@@ -7,7 +7,7 @@ public final class FormFieldView: UIView {
     private let divider = Divider()
 
     public init(
-        title: String,
+        title: String?,
         content: UIView
     ) {
         super.init(frame: .zero)
@@ -25,7 +25,7 @@ public final class FormFieldView: UIView {
 
 private extension FormFieldView {
     func setupViews(
-        title: String,
+        title: String?,
         content: UIView
     ) {
         setupStackView()
@@ -46,7 +46,10 @@ private extension FormFieldView {
         stackView.spacing = 8
     }
 
-    func setupTitleLabel(with title: String) {
+    func setupTitleLabel(
+        with title: String?
+    ) {
+        guard let title else { return }
         stackView.addArrangedSubview(titleLabel)
         titleLabel.font = .preferredFont(
             forTextStyle: .caption1

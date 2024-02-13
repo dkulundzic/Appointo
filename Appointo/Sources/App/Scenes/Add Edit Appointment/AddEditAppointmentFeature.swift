@@ -1,6 +1,7 @@
 import Foundation
 import ComposableArchitecture
 import AppointoModel
+import AppointoCore
 
 @Reducer
 struct AddEditAppointmentFeature {
@@ -10,6 +11,27 @@ struct AddEditAppointmentFeature {
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
+            case .onDeleteButtonTapped:
+                return .run { [appointmentId = state.mode.editedAppointment?.id]  send in
+                    guard 
+                        let appointmentId
+                    else {
+                        return await send(
+                            .onAppointmentDeletionResult(
+                                .failure(GenericError.unknown)
+                            )
+                        )
+                    }
+
+                    await send(
+                        .onAppointmentDeletionResult(
+                            .init(catching: {
+                                try await appointmentRepository.delete(id: appointmentId)
+                            })
+                        )
+                    )
+                }
+
             case .onCancelButtonTapped:
                 return .none
 
@@ -42,6 +64,14 @@ struct AddEditAppointmentFeature {
                 // swiftlint:enable closure_parameter_position
 
             case .onAppointmentSaved:
+                return .none
+
+            case .onAppointmentDeletionResult(.success):
+                print(action, "Success")
+                return .none
+
+            case .onAppointmentDeletionResult(.failure(let error)):
+                print(action, error)
                 return .none
 
             case .onDescriptionChanged(let description):
@@ -84,6 +114,10 @@ struct AddEditAppointmentFeature {
         var selectedLocation: Location?
         var description: String
         let mode: Mode
+
+        var isDeletionAllowed: Bool {
+            mode.isEditing
+        }
 
         init(
             mode: Mode
@@ -140,7 +174,9 @@ struct AddEditAppointmentFeature {
     enum Action {
         case onSaveButtonTapped
         case onCancelButtonTapped
+        case onDeleteButtonTapped
         case onAppointmentSaved(Appointment)
+        case onAppointmentDeletionResult(Result<Void, Error>)
         case onDateSelected(Date)
         case onLocationSelected(Location?)
         case onDescriptionChanged(String)

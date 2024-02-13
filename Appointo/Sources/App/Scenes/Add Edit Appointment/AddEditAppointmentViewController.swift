@@ -56,6 +56,7 @@ private extension AddEditAppointmentViewController {
         specializedView.appointmentDescription = store.description
         specializedView.location = store.selectedLocation
         specializedView.selectedDate = store.selectedDate
+        specializedView.isDeleteButtonHidden = !store.isDeletionAllowed
 
         specializedView.descriptionPublisher
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -73,6 +74,12 @@ private extension AddEditAppointmentViewController {
         specializedView.locationSelectionPublisher
             .sink { [weak self] location in
                 self?.store.send(.onLocationSelected(location))
+            }
+            .store(in: &bag)
+
+        specializedView.deleteButtonTapPublisher
+            .sink { [weak self] _ in
+                self?.store.send(.onDeleteButtonTapped)
             }
             .store(in: &bag)
     }

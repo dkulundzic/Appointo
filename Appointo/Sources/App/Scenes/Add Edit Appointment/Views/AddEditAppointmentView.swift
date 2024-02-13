@@ -6,6 +6,7 @@ import AppointoModel
 import AppointoLocalization
 
 final class AddEditAppointmentView: UIView {
+    private var deleteButtonFormField: FormFieldView?
     private let selectedDateSubject = PassthroughSubject<Date, Never>()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -14,6 +15,7 @@ final class AddEditAppointmentView: UIView {
     private let descriptionTextField = UITextField()
     private let datePicker = UIDatePicker()
     private let locationDropdownView = DropdownMenuView(items: Location.allCases)
+    private let deleteButton = UIButton()
 
     init() {
         super.init(frame: .zero)
@@ -27,6 +29,11 @@ final class AddEditAppointmentView: UIView {
 }
 
 extension AddEditAppointmentView {
+    var isDeleteButtonHidden: Bool {
+        get { deleteButtonFormField?.isHidden ?? true }
+        set { deleteButtonFormField?.isHidden = newValue }
+    }
+
     var appointmentDescription: String? {
         get { descriptionTextField.text }
         set { descriptionTextField.text = newValue }
@@ -62,6 +69,12 @@ extension AddEditAppointmentView {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
+
+    var deleteButtonTapPublisher: AnyPublisher<UIButton, Never> {
+        deleteButton
+            .publisher(for: .touchUpInside)
+            .eraseToAnyPublisher()
+    }
 }
 
 private extension AddEditAppointmentView {
@@ -84,6 +97,7 @@ private extension AddEditAppointmentView {
         setupDescriptionTextField()
         setupDatePicker()
         setupLocationDropdownView()
+        setupDeleteButton()
     }
 
     func setupScrollView() {
@@ -156,6 +170,27 @@ private extension AddEditAppointmentView {
                 content: locationDropdownView
             )
         )
+    }
+
+    func setupDeleteButton() {
+        let deleteButtonFormField = FormFieldView(
+            title: nil,
+            content: deleteButton
+        )
+        self.deleteButtonFormField = deleteButtonFormField
+        contentStackView.addArrangedSubview(deleteButtonFormField)
+
+        deleteButton.contentHorizontalAlignment = .leading
+        deleteButton.role = .destructive
+        deleteButton.configuration = {
+            var configuration = UIButton.Configuration.plain()
+            // TODO: - Localize
+            configuration.title = "Delete appointment"
+            configuration.imagePlacement = .trailing
+            configuration.baseForegroundColor = .systemRed
+            configuration.contentInsets = .zero
+            return configuration
+        }()
     }
 }
 
