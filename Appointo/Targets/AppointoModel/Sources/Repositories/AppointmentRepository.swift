@@ -20,8 +20,9 @@ public actor DefaultAppointmentRepository: AppointmentRepository {
         _ object: Appointment
     ) async throws {
         Task {
-            if let indexOf = objectsSubject
-                    .value.firstIndex(of: object) {
+            if let indexOf = objectsSubject.value.firstIndex(where: {
+                $0.id == object.id
+            }) {
                 objectsSubject.value[indexOf] = object
             } else {
                 objectsSubject.value.append(

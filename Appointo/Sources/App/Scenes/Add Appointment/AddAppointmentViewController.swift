@@ -11,19 +11,18 @@ final class AddAppointmentViewController: StoreViewController<AddAppointmentFeat
         setup()
         observeStore()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        store.send(.onViewWillAppear)
+    }
 }
 
 extension AddAppointmentViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
-        store.send(.dismissed)
-    }
-
-    func presentationControllerShouldDismiss(
-        _ presentationController: UIPresentationController
-    ) -> Bool {
-        store.isFormValid
+        store.send(.onDismissed)
     }
 }
 
@@ -40,13 +39,13 @@ private extension AddAppointmentViewController {
         navigationItem.leftBarButtonItem = .init(
             systemItem: .cancel,
             primaryAction: .init { [weak self] _ in
-                self?.store.send(.cancelButtonTapped)
+                self?.store.send(.onCancelButtonTapped)
             }
         )
         navigationItem.rightBarButtonItem = .init(
             systemItem: .save,
             primaryAction: .init { [weak self] _ in
-                self?.store.send(.saveButtonTapped)
+                self?.store.send(.onSaveButtonTapped)
             }
         )
 
@@ -54,21 +53,26 @@ private extension AddAppointmentViewController {
     }
 
     func setupView() {
+        specializedView.appointmentDescription = store.description
+        specializedView.location = store.selectedLocation
+        specializedView.selectedDate = store.selectedDate
+
         specializedView.descriptionPublisher
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .sink { [weak self] description in
-                self?.store.send(.descriptionChanged(description))
+                self?.store.send(.onDescriptionChanged(description))
             }
             .store(in: &bag)
 
         specializedView.datePublisher
             .sink { [weak self] date in
-                self?.store.send(.dateSelected(date))
+                self?.store.send(.onDateSelected(date))
             }
             .store(in: &bag)
 
         specializedView.locationSelectionPublisher
             .sink { [weak self] location in
-                self?.store.send(.locationSelected(location))
+                self?.store.send(.onLocationSelected(location))
             }
             .store(in: &bag)
     }
@@ -80,16 +84,8 @@ private extension AddAppointmentViewController {
             }
 
             navigationItem
-                .leftBarButtonItem?
-                .isEnabled = store.mode.isEditing ? store.isFormValid : true
-
-            navigationItem
                 .rightBarButtonItem?
                 .isEnabled = store.isFormValid
-
-            specializedView.appointmentDescription = store.description
-            specializedView.location = store.selectedLocation
-            specializedView.selectedDate = store.selectedDate
         }
     }
 }

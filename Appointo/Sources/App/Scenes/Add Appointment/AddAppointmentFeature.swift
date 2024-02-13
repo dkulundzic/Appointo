@@ -5,14 +5,15 @@ import AppointoModel
 @Reducer
 struct AddAppointmentFeature {
     @Dependency(\.appointmentRepository) private var appointmentRepository
+    @Dependency(\.addAppointmentFormValidator) private var formValidator
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .cancelButtonTapped:
+            case .onCancelButtonTapped:
                 return .none
 
-            case .saveButtonTapped:
+            case .onSaveButtonTapped:
                 guard
                     let selectedLocation = state.selectedLocation
                 else {
@@ -36,29 +37,41 @@ struct AddAppointmentFeature {
                         appointment
                     )
 
-                    await send(.appointmentSaved(appointment))
+                    await send(.onAppointmentSaved(appointment))
                 }
                 // swiftlint:enable closure_parameter_position
 
-            case .appointmentSaved:
+            case .onAppointmentSaved:
                 return .none
 
-            case .descriptionChanged(let description):
+            case .onDescriptionChanged(let description):
                 state.description = description
-                state.validate()
+                state.validate(
+                    using: formValidator
+                )
                 return .none
 
-            case .dateSelected(let date):
+            case .onDateSelected(let date):
                 state.selectedDate = date
-                state.validate()
+                state.validate(
+                    using: formValidator
+                )
                 return .none
 
-            case .locationSelected(let location):
+            case .onLocationSelected(let location):
                 state.selectedLocation = location
-                state.validate()
+                state.validate(
+                    using: formValidator
+                )
                 return .none
 
-            case .dismissed:
+            case .onViewWillAppear:
+                state.validate(
+                    using: formValidator
+                )
+                return .none
+
+            case .onDismissed:
                 return .none
             }
         }
@@ -87,13 +100,17 @@ struct AddAppointmentFeature {
                 selectedLocation = appointment.location
                 description = appointment.description
             }
-
-            validate()
         }
 
-        mutating func validate() {
-            let optionals: [Any?] = [selectedDate, selectedLocation]
-            isFormValid = optionals.allSatisfy { $0 != nil } && !description.isEmpty
+        mutating func validate(
+            using validator: some AddAppointmentFormValidator
+        ) {
+            isFormValid = validator.validate(
+                description: description,
+                selectedDate: selectedDate,
+                selectedLocation: selectedLocation,
+                in: mode
+            )
         }
 
         enum Mode: Equatable {
@@ -121,12 +138,13 @@ struct AddAppointmentFeature {
     }
 
     enum Action {
-        case saveButtonTapped
-        case cancelButtonTapped
-        case appointmentSaved(Appointment)
-        case dateSelected(Date)
-        case locationSelected(Location?)
-        case descriptionChanged(String)
-        case dismissed
+        case onSaveButtonTapped
+        case onCancelButtonTapped
+        case onAppointmentSaved(Appointment)
+        case onDateSelected(Date)
+        case onLocationSelected(Location?)
+        case onDescriptionChanged(String)
+        case onViewWillAppear
+        case onDismissed
     }
 }

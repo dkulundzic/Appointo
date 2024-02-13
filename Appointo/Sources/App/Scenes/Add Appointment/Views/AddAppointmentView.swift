@@ -44,18 +44,21 @@ extension AddAppointmentView {
 
     var descriptionPublisher: AnyPublisher<String, Never> {
         descriptionTextField.textPublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     var datePublisher: AnyPublisher<Date, Never> {
         selectedDateSubject
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     var locationSelectionPublisher: AnyPublisher<Location?, Never> {
         locationDropdownView.$selectedItem
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
@@ -141,7 +144,9 @@ private extension AddAppointmentView {
 
         datePicker.preferredDatePickerStyle = .compact
         datePicker.minuteInterval = 15
-        datePicker.addTarget(self, action: #selector(dateSelected), for: .valueChanged)
+        datePicker.addTarget(
+            self, action: #selector(dateSelected), for: .valueChanged
+        )
     }
 
     func setupLocationDropdownView() {

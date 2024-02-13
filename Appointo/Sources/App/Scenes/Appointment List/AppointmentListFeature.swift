@@ -49,15 +49,15 @@ struct AppointmentListFeature {
 
                 return .none
 
-            case .destination(.presented(.addAppointment(.dismissed))):
+            case .destination(.presented(.addAppointment(.onDismissed))):
                 state.destination = nil
                 return .none
             
-            case .destination(.presented(.addAppointment(.saveButtonTapped))):
+            case .destination(.presented(.addAppointment(.onSaveButtonTapped))):
                 state.destination = nil
                 return .none
 
-            case .destination(.presented(.addAppointment(.cancelButtonTapped))):
+            case .destination(.presented(.addAppointment(.onCancelButtonTapped))):
                 state.destination = nil
                 return .none
 
