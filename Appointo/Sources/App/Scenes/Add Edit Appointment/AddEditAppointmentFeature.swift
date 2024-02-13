@@ -26,7 +26,9 @@ struct AddEditAppointmentFeature {
                     await send(
                         .onAppointmentDeletionResult(
                             .init(catching: {
-                                try await appointmentRepository.delete(id: appointmentId)
+                                try await appointmentRepository.delete(
+                                    id: appointmentId
+                                )
                             })
                         )
                     )

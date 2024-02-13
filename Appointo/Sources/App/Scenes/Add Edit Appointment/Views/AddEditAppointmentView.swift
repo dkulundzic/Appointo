@@ -73,6 +73,7 @@ extension AddEditAppointmentView {
     var deleteButtonTapPublisher: AnyPublisher<UIButton, Never> {
         deleteButton
             .publisher(for: .touchUpInside)
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }
