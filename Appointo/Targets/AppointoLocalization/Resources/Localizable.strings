@@ -1,5 +1,6 @@
 // MARK: - Appointment List
 "appointment_list_title" = "Appointo";
+"appointment_list_item_cell_subtitle_format" = "In %@ @ %@";
 "appointment_list_empty_list_background_view_title" = "No appointments";
 "appointment_list_empty_list_background_view_subtitle" = "Add your first appointment with the + button.";
 

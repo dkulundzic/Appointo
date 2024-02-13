@@ -179,6 +179,7 @@ private extension AddEditAppointmentView {
             content: deleteButton
         )
         self.deleteButtonFormField = deleteButtonFormField
+        self.deleteButtonFormField?.isDividerHidden = true
         contentStackView.addArrangedSubview(deleteButtonFormField)
 
         deleteButton.contentHorizontalAlignment = .leading

@@ -1,10 +1,18 @@
 import UIKit
 import AppointoModel
 import AppointoUi
+import AppointoLocalization
 
 public struct AppointmentListCellProvider: CellProvider {
     public typealias Item = Appointment
     public typealias Cell = AppointmentListCell
+
+    private static let timeFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
 
     public func provideCell(
         for tableView: UITableView,
@@ -15,9 +23,18 @@ public struct AppointmentListCellProvider: CellProvider {
             AppointmentListCell.self, for: indexPath
         )
 
+        let formattedTime = Self.timeFormatter.string(
+            from: item.date
+        )
+
         cell.update(
             using: .init(
-                description: item.description
+                title: item.description,
+                subtitle: AppointoLocalizationStrings
+                    .appointmentListItemCellSubtitleFormat(
+                        item.location.title,
+                        formattedTime
+                    )
             )
         )
 

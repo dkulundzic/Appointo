@@ -23,6 +23,13 @@ public final class FormFieldView: UIView {
     }
 }
 
+public extension FormFieldView {
+    var isDividerHidden: Bool {
+        get { divider.isHidden }
+        set { divider.isHidden = newValue }
+    }
+}
+
 private extension FormFieldView {
     func setupViews(
         title: String?,
