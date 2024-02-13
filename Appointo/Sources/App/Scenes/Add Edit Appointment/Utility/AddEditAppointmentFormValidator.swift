@@ -1,21 +1,21 @@
 import Foundation
 import AppointoModel
 
-protocol AddAppointmentFormValidator {
+protocol AddEditAppointmentFormValidator {
     func validate(
         description: String,
         selectedDate: Date,
         selectedLocation: Location?,
-        in mode: AddAppointmentFeature.State.Mode
+        in mode: AddEditAppointmentFeature.State.Mode
     ) -> Bool
 }
 
-struct DefaultAddAppointmentFormValidator: AddAppointmentFormValidator {
+struct DefaultAddEditAppointmentFormValidator: AddEditAppointmentFormValidator {
     func validate(
         description: String,
         selectedDate: Date,
         selectedLocation: Location?,
-        in mode: AddAppointmentFeature.State.Mode
+        in mode: AddEditAppointmentFeature.State.Mode
     ) -> Bool {
         switch mode {
         case .creation:
@@ -36,7 +36,7 @@ struct DefaultAddAppointmentFormValidator: AddAppointmentFormValidator {
     }
 }
 
-private extension DefaultAddAppointmentFormValidator {
+private extension DefaultAddEditAppointmentFormValidator {
     func validateCreation(
         description: String,
         selectedDate: Date,

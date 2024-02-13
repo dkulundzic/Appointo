@@ -3,7 +3,7 @@ import Combine
 import ComposableArchitecture
 import AppointoLocalization
 
-final class AddAppointmentViewController: StoreViewController<AddAppointmentFeature, AddAppointmentView> {
+final class AddEditAppointmentViewController: StoreViewController<AddEditAppointmentFeature, AddEditAppointmentView> {
     private var bag = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -18,7 +18,7 @@ final class AddAppointmentViewController: StoreViewController<AddAppointmentFeat
     }
 }
 
-extension AddAppointmentViewController: UIAdaptivePresentationControllerDelegate {
+extension AddEditAppointmentViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
@@ -26,7 +26,7 @@ extension AddAppointmentViewController: UIAdaptivePresentationControllerDelegate
     }
 }
 
-private extension AddAppointmentViewController {
+private extension AddEditAppointmentViewController {
     func setup() {
         setupNavigation()
         setupView()

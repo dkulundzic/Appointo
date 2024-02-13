@@ -32,7 +32,7 @@ final class AppointmentListView: UIView {
 private extension AppointmentListView {
     func setupViews() {
         setupTableView()
-        setupAddAppointmentButton()
+        setupAddEditAppointmentButton()
     }
 
     func setupTableView() {
@@ -47,7 +47,7 @@ private extension AppointmentListView {
         tableView.registerReusableHeader(AppointmentListSectionHeader.self)
     }
 
-    func setupAddAppointmentButton() {
+    func setupAddEditAppointmentButton() {
         addSubview(addAppointmentButton)
         addAppointmentButton.snp.makeConstraints {
             $0.trailing.equalTo(safeAreaLayoutGuide).inset(16)

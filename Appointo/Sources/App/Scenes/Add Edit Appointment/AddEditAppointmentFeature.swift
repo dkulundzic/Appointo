@@ -3,7 +3,7 @@ import ComposableArchitecture
 import AppointoModel
 
 @Reducer
-struct AddAppointmentFeature {
+struct AddEditAppointmentFeature {
     @Dependency(\.appointmentRepository) private var appointmentRepository
     @Dependency(\.addAppointmentFormValidator) private var formValidator
 
@@ -103,7 +103,7 @@ struct AddAppointmentFeature {
         }
 
         mutating func validate(
-            using validator: some AddAppointmentFormValidator
+            using validator: some AddEditAppointmentFormValidator
         ) {
             isFormValid = validator.validate(
                 description: description,

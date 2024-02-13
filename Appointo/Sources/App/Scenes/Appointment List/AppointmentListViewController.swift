@@ -60,7 +60,7 @@ private extension AppointmentListViewController {
 
         specializedView.tableView.delegate = self
         specializedView.addAppointmentTapped = { [weak self] in
-            self?.store.send(.onAddAppointmentButtonTapped)
+            self?.store.send(.onAddEditAppointmentButtonTapped)
         }
     }
 
@@ -89,7 +89,7 @@ private extension AppointmentListViewController {
             .ifLet(
                 then: { [weak self] store in
                     let addAppointment = UINavigationController(
-                        rootViewController: AddAppointmentViewController(store: store)
+                        rootViewController: AddEditAppointmentViewController(store: store)
                     )
                     self?.present(addAppointment, animated: true)
                 },

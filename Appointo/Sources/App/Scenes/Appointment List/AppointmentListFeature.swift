@@ -30,7 +30,7 @@ struct AppointmentListFeature {
                 state.sections = sectionVendor.sections(for: appointments)
                 return .none
 
-            case .onAddAppointmentButtonTapped:
+            case .onAddEditAppointmentButtonTapped:
                 state.destination = .addAppointment(
                     .init(mode: .creation)
                 )
@@ -83,11 +83,11 @@ struct AppointmentListFeature {
     struct Destination {
         @ObservableState
         enum State: Equatable {
-            case addAppointment(AddAppointmentFeature.State)
+            case addAppointment(AddEditAppointmentFeature.State)
         }
 
         enum Action {
-            case addAppointment(AddAppointmentFeature.Action)
+            case addAppointment(AddEditAppointmentFeature.Action)
         }
 
         var body: some ReducerOf<Self> {
@@ -95,7 +95,7 @@ struct AppointmentListFeature {
                 state: \.addAppointment,
                 action: \.addAppointment
             ) {
-                AddAppointmentFeature()
+                AddEditAppointmentFeature()
             }
         }
     }
@@ -103,7 +103,7 @@ struct AppointmentListFeature {
     enum Action {
         case onViewAppeared
         case onAppointmentsLoaded([Appointment])
-        case onAddAppointmentButtonTapped
+        case onAddEditAppointmentButtonTapped
         case onAppointmentListItemTapped(IndexPath)
         case destination(PresentationAction<Destination.Action>)
     }

@@ -5,7 +5,7 @@ import AppointoCore
 import AppointoModel
 import AppointoLocalization
 
-final class AddAppointmentView: UIView {
+final class AddEditAppointmentView: UIView {
     private let selectedDateSubject = PassthroughSubject<Date, Never>()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -26,7 +26,7 @@ final class AddAppointmentView: UIView {
     }
 }
 
-extension AddAppointmentView {
+extension AddEditAppointmentView {
     var appointmentDescription: String? {
         get { descriptionTextField.text }
         set { descriptionTextField.text = newValue }
@@ -64,7 +64,7 @@ extension AddAppointmentView {
     }
 }
 
-private extension AddAppointmentView {
+private extension AddEditAppointmentView {
     @objc func dateSelected(
         _ datePicker: UIDatePicker
     ) {
@@ -74,7 +74,7 @@ private extension AddAppointmentView {
     }
 }
 
-private extension AddAppointmentView {
+private extension AddEditAppointmentView {
     func setupViews() {
         backgroundColor = .systemGroupedBackground
         setupScrollView()
@@ -160,5 +160,5 @@ private extension AddAppointmentView {
 }
 
 #Preview {
-    AddAppointmentView()
+    AddEditAppointmentView()
 }
