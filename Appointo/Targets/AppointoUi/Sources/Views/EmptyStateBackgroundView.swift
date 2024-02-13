@@ -59,7 +59,7 @@ private extension EmptyStateBackgroundView {
 
     func setupTitleLabel() {
         stackView.addArrangedSubview(titleLabel)
-        titleLabel.textColor = .systemGray
+        titleLabel.textColor = .darkGray
         titleLabel.font = .preferredFont(
             forTextStyle: .title3
         )
@@ -67,7 +67,7 @@ private extension EmptyStateBackgroundView {
 
     func setupSubtitleLabel() {
         stackView.addArrangedSubview(subtitleLabel)
-        subtitleLabel.textColor = .systemGray2
+        subtitleLabel.textColor = .systemGray
         subtitleLabel.font = .preferredFont(
             forTextStyle: .footnote
         )

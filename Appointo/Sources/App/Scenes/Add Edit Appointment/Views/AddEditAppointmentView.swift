@@ -185,8 +185,7 @@ private extension AddEditAppointmentView {
         deleteButton.role = .destructive
         deleteButton.configuration = {
             var configuration = UIButton.Configuration.plain()
-            // TODO: - Localize
-            configuration.title = "Delete appointment"
+            configuration.title = AppointoLocalizationStrings.addAppointmentFormFieldDelete
             configuration.imagePlacement = .trailing
             configuration.baseForegroundColor = .systemRed
             configuration.contentInsets = .zero

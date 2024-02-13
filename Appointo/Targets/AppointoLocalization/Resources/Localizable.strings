@@ -1,5 +1,7 @@
 // MARK: - Appointment List
 "appointment_list_title" = "Appointo";
+"appointment_list_empty_list_background_view_title" = "No appointments";
+"appointment_list_empty_list_background_view_subtitle" = "Add your first appointment with the + button.";
 
 // MARK: - Add Appointment
 "add_appointment_default_title" = "Add Appointment";
@@ -8,3 +10,7 @@
 "add_appointment_form_field_description_placeholder" = "Description";
 "add_appointment_form_field_date_title" = "Date";
 "add_appointment_form_field_location_title" = "Location";
+"add_appointment_form_field_delete" = "Delete appointment";
+
+// MARK: - DropdownMenuView
+"dropdown_menu_view_no_selection_format" = "No %@ selected";

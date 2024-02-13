@@ -2,6 +2,7 @@ import UIKit
 import SnapKit
 import AppointoUi
 import AppointoCore
+import AppointoLocalization
 
 final class AppointmentListView: UIView {
     var addAppointmentTapped: Action?
@@ -52,8 +53,8 @@ private extension AppointmentListView {
         }
         emptyListBackgroundView.update(
             using: .init(
-                title: "No appointments",
-                subtitle: "Add your first appointment with the + button."
+                title: AppointoLocalizationStrings.appointmentListEmptyListBackgroundViewTitle,
+                subtitle: AppointoLocalizationStrings.appointmentListEmptyListBackgroundViewSubtitle
             )
         )
     }

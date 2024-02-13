@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 import Combine
+import AppointoLocalization
 
 public protocol DropdownMenuViewItem: Hashable {
     var title: String { get }
@@ -13,9 +14,12 @@ open class DropdownMenuView<Item>: UIView where Item: DropdownMenuViewItem {
     private let stackView = UIStackView()
     private let selectionButton = UIButton(type: .system)
 
-    // TODO: - Localize
     private var noSelectionTitle: String {
-        "No \(String(describing: Item.self).lowercased()) selected"
+        AppointoLocalizationStrings.dropdownMenuViewNoSelectionFormat(
+            String(
+                describing: Item.self
+            ).lowercased()
+        )
     }
 
     public init(
